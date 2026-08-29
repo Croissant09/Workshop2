@@ -3,13 +3,178 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http -equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>HelloWorld</title>
+    <style>
+        :root {
+            --bg: #161a23;
+            --bg-panel: #1e2330;
+            --ink: #f3efe4;
+            --ink-dim: #8890a4;
+            --amber: #e8a33d;
+            --teal: #4fa89b;
+            --rule: rgba(243, 239, 228, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            background-image:
+                radial-gradient(circle at 20% 15%, rgba(79, 168, 155, 0.08), transparent 40%),
+                radial-gradient(circle at 85% 80%, rgba(232, 163, 61, 0.07), transparent 45%);
+            color: var(--ink);
+            font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .editor {
+            width: 100%;
+            max-width: 640px;
+            background: var(--bg-panel);
+            border-radius: 14px;
+            border: 1px solid var(--rule);
+            box-shadow:
+                0 30px 60px -25px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(255, 255, 255, 0.02);
+            overflow: hidden;
+        }
+
+        .titlebar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4a5066;
+        }
+
+        .filename {
+            margin-left: 8px;
+            font-family: "SF Mono", "Menlo", "Consolas", monospace;
+            font-size: 12px;
+            letter-spacing: 0.02em;
+            color: var(--ink-dim);
+        }
+
+        .code {
+            font-family: "SF Mono", "Menlo", "Consolas", monospace;
+            font-size: 15px;
+            line-height: 1.9;
+            padding: 28px 32px 34px;
+        }
+
+        .line {
+            display: flex;
+            gap: 20px;
+        }
+
+        .no {
+            color: #3f4658;
+            user-select: none;
+            min-width: 14px;
+            text-align: right;
+        }
+
+        .kw { color: var(--teal); }
+        .fn { color: #b9c6f2; }
+        .str { color: var(--amber); }
+        .punct { color: var(--ink-dim); }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1.1em;
+            background: var(--amber);
+            margin-left: 2px;
+            vertical-align: -2px;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .caption {
+            text-align: center;
+            margin-top: 22px;
+            color: var(--ink-dim);
+            font-size: 14px;
+            font-style: italic;
+            letter-spacing: 0.01em;
+        }
+
+        .wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #typed {
+            opacity: 0;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .cursor { animation: none; }
+        }
+    </style>
 </head>
 
 <body>
-    <h 1>HelloWorld</h 1>
+    <div class="wrap">
+        <div class="editor">
+            <div class="titlebar">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="filename">hello.js</span>
+            </div>
+            <div class="code">
+                <div class="line"><span class="no">1</span><span><span class="fn">console</span><span class="punct">.</span><span class="fn">log</span><span class="punct">(</span><span class="str">"<span id="typed"></span><span class="cursor"></span>"</span><span class="punct">)</span></span></div>
+            </div>
+        </div>
+        <p class="caption">every program starts with a greeting.</p>
+    </div>
+
+    <script>
+        const text = "Hello, World!";
+        const el = document.getElementById("typed");
+        el.style.opacity = 1;
+        let i = 0;
+        const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        if (prefersReduced) {
+            el.textContent = text;
+        } else {
+            const type = () => {
+                if (i <= text.length) {
+                    el.textContent = text.slice(0, i);
+                    i++;
+                    setTimeout(type, 85);
+                }
+            };
+            setTimeout(type, 400);
+        }
+    </script>
 </body>
 
 </html>
